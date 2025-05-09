@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NS-HyMAP</title>
+    <style>
+        body {
+            background-color: #f4f4f4; /* Light grey background */
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif; /* Modern font */
+            color: #333; /* Darker text color */
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #530000;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+
+        .logo img {
+            max-width: 180px;
+            height: auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .burgundy-bar {
+            height: 40px;
+            background-color: #530000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .burgundy-bar button {
+            background-color: #530000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 0 15px;
+        }
+
+        .burgundy-bar button:hover {
+            background-color: #3d0101;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 36px;
+            color: #530000;
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .instructions-container {
+            width: 50%;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin-right: 20px;
+        }
+
+        .chart-container {
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-container {
+            display: flex;
+            flex-direction: column;
+            width: 25%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            font-size: 18px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .cycle-state1 {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        footer {
+    background-color: #530000;
+    color: white;
+    text-align: center;
+    padding: 0.5px 0; /* Further reduce padding for a shorter footer */
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    font-size: 12px; /* Reduce font size for a more compact footer */
+}
+
+        .buttons-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #startCollecting,
+        #Stop {
+            background-color: #530000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+
+        #startCollecting[disabled],
+        #Stop[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #Instructions {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='USClogo.png') }}" alt="USC Logo">
+            </div>
+            <h1>NS-HyMAP: Multimodal Anomaly Prediction Dashboard</h1>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='AIISC_logo.png') }}" alt="AIISC Logo">
+            </div>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='nextLogo.png') }}" alt="neXt Logo">
+            </div>
+        </div>
+    </header>
+
+    <div class="burgundy-bar">
+        <button><a style="color: white;text-decoration: none;" href="NS_HyMAP.html">Main Page</a></button>
+        <button><a style="color: white;text-decoration: none;" href="RCA.html">Explanation Dashboard</a></button>
+    </div>
+
+    <h2>Multimodal Anomaly Prediction</h2>
+
+    <div class="main-container">
+        <div class="instructions-container">
+            <div id="Instructions">
+                <b>Instructions:</b><br><br>
+                1) Start the assembly process, same time press the "Start Analyze" button.<br><br>
+                2) If the assembly has not started, "No Values" will appear in the table above.<br><br>
+                3) Once the assembly process starts, the corresponding values are shown in the graph to the right.<br><br>
+                4) The prediction text box will display the predicted anomaly.
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td class="cycle-state1">Cycle State:</td>
+                    <td id="CycleState" class="cycle-state">Waiting on Input</td>
+                </tr>
+                <tr>
+                    <td class="cycle-state1">Prediction Result:</td>
+                    <td id="PredictionResult" class="cycle-state">Click Start Analyze First</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="chartR02"></canvas>
+            <canvas id="chartR03"></canvas>
+        </div>
+
+
+    </div>
+
+    <div class="buttons-container">
+        <button id="startCollecting">Start Analyzing</button>
+        <button id="Stop" disabled>Stop Analyzing</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+         var ctxR02 = document.getElementById('chartR02').getContext('2d');
+        var ctxR03 = document.getElementById('chartR03').getContext('2d');
+
+        var chartR02 = new Chart(ctxR02, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'R02 Potentiometer',
+                        data: [],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Predicted R02 Potentiometer',
+                        data: [],
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var chartR03 = new Chart(ctxR03, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'R03 Potentiometer',
+                        data: [],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Predicted R03 Potentiometer',
+                        data: [],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var intervalId;
+        var mode = 'collect';
+        var fetchDelay = 1000;
+
+        function startCollectingData() {
+            document.getElementById('startCollecting').disabled = true;
+            mode = 'collect';
+            intervalId = setInterval(fetchData, 1000);
+        }
+
+        function fetchData() {
+            if (mode === 'predict') return;
+
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(data => {
+                    var newDataPointR02 = data.r02;
+                    var newDataPointR03 = data.r03;
+                    var CycleState = data.CycleState;
+                    var AnomalyLabel = data.AnomalyLabel;
+                    var predictedR02 = data.Predicted_R02;
+                    var predictedR03 = data.Predicted_R03;
+
+                    // Update R02 chart
+                    chartR02.data.labels.push(chartR02.data.labels.length);
+                    chartR02.data.datasets[0].data.push(newDataPointR02);
+                    chartR02.data.datasets[1].data.push(predictedR02);
+                    chartR02.update();
+
+                    // Update R03 chart
+                    chartR03.data.labels.push(chartR03.data.labels.length);
+                    chartR03.data.datasets[0].data.push(newDataPointR03);
+                    chartR03.data.datasets[1].data.push(predictedR03);
+                    chartR03.update();
+
+                    document.getElementById('CycleState').textContent = CycleState;
+                    document.getElementById('PredictionResult').textContent = AnomalyLabel;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        function predict() {
+            document.getElementById('Predict').disabled = true;
+            document.getElementById('PredictionResult').textContent = "Analyzing";
+            mode = 'predict';
+
+            fetch('/predict')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('PredictionResult').textContent = data.result;
+                    clearInterval(intervalId);
+                    document.getElementById('startCollecting').disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error during prediction:', error);
+                });
+        }
+
+        document.getElementById('startCollecting').addEventListener('click', startCollectingData);
+        document.getElementById('Predict').addEventListener('click', predict);
+    </script>
+ <footer>
+        <p>2024 @NS-HyMAP</p>
+    </footer>
+</body>
+</html>
