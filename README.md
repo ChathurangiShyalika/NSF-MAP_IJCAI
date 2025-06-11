@@ -67,3 +67,17 @@ Demo video is available at: https://shorturl.at/IY9tt
 # 6. Additional Experiments on NSF-MAP 
 This folder includes additional experimental results of NSF-MAP and ablation Studies. The document includes the Mean Squared Errors (MSE) and Root Mean Squared Errors (RMSE) for the
 sensor values and predicted anomaly labels. The folder also includes additional experiments on the process ontology.
+
+
+
+# How to cite
+If you use NSF-MAP or any of its components in your research, publications, or systems, please cite the following works:
+```
+@article{shyalika2025nsf,
+  title={NSF-MAP: Neurosymbolic Multimodal Fusion for Robust and Interpretable Anomaly Prediction in Assembly Pipelines},
+  author={Shyalika, Chathurangi and Prasad, Renjith and Kalach, Fadi El and Venkataramanan, Revathy and Zand, Ramtin and Harik, Ramy and Sheth, Amit},
+  journal={arXiv preprint arXiv:2505.06333},
+  year={2025}
+}
+
+```
